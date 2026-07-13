@@ -34,7 +34,7 @@ app.get('/health', (_, res) => {
 app.use('/api', createAudioRouter({ audioService, uploadQueue }));
 
 app.use((error, _req, res, _next) => {
-  const statusCode = error.message && error.message.startsWith('Missing') ? 400 : 500;
+  const statusCode = Number(error.statusCode) || 500;
   res.status(statusCode).json({ error: error.message || 'Unexpected error' });
 });
 

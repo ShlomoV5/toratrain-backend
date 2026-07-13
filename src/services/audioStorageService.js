@@ -1,8 +1,15 @@
 const fs = require('node:fs/promises');
 const path = require('node:path');
+const { randomUUID } = require('node:crypto');
 
 const SEGMENT_PARTS = ['nusach', 'bookId', 'chapter', 'verse', 'partIndex'];
 const FILE_NAME_PATTERN = /^([A-Za-z0-9]{2})-([A-Za-z0-9]{2})-([A-Za-z0-9]{2})-([A-Za-z0-9]{2})-([A-Za-z0-9]{2})\.([A-Za-z0-9]+)$/;
+
+function validationError(message) {
+  const error = new Error(message);
+  error.statusCode = 400;
+  return error;
+}
 
 class AudioStorageService {
   constructor(storagePath) {
@@ -16,7 +23,7 @@ class AudioStorageService {
   static sanitizePart(value) {
     const v = String(value).trim();
     if (!/^[A-Za-z0-9]+$/.test(v)) {
-      throw new Error(`Invalid segment value: ${value}`);
+      throw validationError(`Invalid segment value: ${value}`);
     }
     return v;
   }
@@ -25,7 +32,7 @@ class AudioStorageService {
     const normalized = {};
     for (const key of SEGMENT_PARTS) {
       if (segment[key] === undefined || segment[key] === null || segment[key] === '') {
-        throw new Error(`Missing required segment field: ${key}`);
+        throw validationError(`Missing required segment field: ${key}`);
       }
       normalized[key] = AudioStorageService.sanitizePart(segment[key]);
     }
@@ -93,7 +100,7 @@ class AudioStorageService {
     const safeExtension = AudioStorageService.sanitizePart(extension.toLowerCase());
     const stem = AudioStorageService.buildStem(segment);
     const targetPath = path.join(this.storagePath, `${stem}.${safeExtension}`);
-    const tempPath = `${targetPath}.tmp-${Date.now()}`;
+    const tempPath = `${targetPath}.tmp-${randomUUID()}`;
 
     await fs.writeFile(tempPath, buffer);
     await fs.rename(tempPath, targetPath);

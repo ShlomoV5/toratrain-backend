@@ -30,10 +30,21 @@ function detectExtension(fileName, mimeType) {
     return extFromMime;
   }
 
-  throw new Error('Unsupported audio format');
+  const error = new Error('Unsupported audio format');
+  error.statusCode = 400;
+  throw error;
 }
 
 function buildMeta(body) {
+  const requiredFields = ['nusach', 'bookId', 'chapter', 'verse', 'partIndex'];
+  for (const field of requiredFields) {
+    if (body[field] === undefined || body[field] === null || body[field] === '') {
+      const error = new Error(`Missing required field: ${field}`);
+      error.statusCode = 400;
+      throw error;
+    }
+  }
+
   return {
     nusach: body.nusach,
     bookId: body.bookId,
