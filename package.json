@@ -4,7 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node --test",
+    "start": "node src/server.js",
+    "lint": "node --check src/server.js src/routes/audioRoutes.js src/queue/uploadQueue.js src/services/audioStorageService.js",
+    "build": "node -e \"console.log('No build step required for runtime JS')\""
   },
   "repository": {
     "type": "git",
