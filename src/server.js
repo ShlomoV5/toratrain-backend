@@ -3,6 +3,7 @@ const path = require('node:path');
 const { AudioStorageService } = require('./services/audioStorageService');
 const { UploadQueue } = require('./queue/uploadQueue');
 const { createAudioRouter } = require('./routes/audioRoutes');
+const { createTextRouter } = require('./routes/textRoutes');
 
 const app = express();
 app.use(express.json({ limit: '25mb' }));
@@ -32,6 +33,7 @@ app.get('/health', (_, res) => {
 });
 
 app.use('/api', createAudioRouter({ audioService, uploadQueue }));
+app.use('/api/texts', createTextRouter());
 
 app.use((error, _req, res, _next) => {
   const statusCode = Number(error.statusCode) || 500;
