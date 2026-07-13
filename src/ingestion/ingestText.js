@@ -18,6 +18,7 @@ const { SefariaService, ALL_BOOKS } = require('../services/sefariaService');
 const { getPool, closePool } = require('../db/client');
 
 // Delay helper to avoid overwhelming the Sefaria API
+const SEFARIA_API_DELAY_MS = 250;
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 /**
@@ -218,7 +219,7 @@ async function main() {
       }
       // Polite delay between API calls
       if (ch < chapterTo) {
-        await delay(250);
+        await delay(SEFARIA_API_DELAY_MS);
       }
     }
   }

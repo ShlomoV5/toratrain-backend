@@ -43,8 +43,6 @@ const NIKUD_REGEX = /[\u05B0-\u05BD\u05BF\u05C1\u05C2\u05C4\u05C5\u05C7]/g;
 
 // Named trope codes — maps Unicode code point (hex) to conventional trope name
 const TROPE_NAMES = {
-  '05C1': 'shin_dot',
-  '05C2': 'sin_dot',
   '0591': 'etnahta',
   '0592': 'segol_accent',
   '0593': 'shalshelet',

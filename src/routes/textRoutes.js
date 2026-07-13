@@ -1,8 +1,17 @@
 const express = require('express');
+const rateLimit = require('express-rate-limit');
 const { getPool } = require('../db/client');
+
+const textRateLimiter = rateLimit({
+  windowMs: 60 * 1000,
+  max: 120,
+  standardHeaders: true,
+  legacyHeaders: false,
+});
 
 function createTextRouter() {
   const router = express.Router();
+  router.use(textRateLimiter);
 
   /** GET /api/texts/books — list all books */
   router.get('/books', async (_req, res, next) => {

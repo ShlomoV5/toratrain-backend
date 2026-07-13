@@ -23,6 +23,7 @@
   "homepage": "https://github.com/ShlomoV5/toratrain-backend#readme",
   "dependencies": {
     "express": "^5.2.1",
+    "express-rate-limit": "^8.5.2",
     "multer": "^2.2.0",
     "pg": "^8.22.0"
   }
