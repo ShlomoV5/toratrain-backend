@@ -1,6 +1,7 @@
 const express = require('express');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const rateLimit = require('express-rate-limit');
 const path = require('path');
 const YAML = require('yamljs');
 const swaggerUi = require('swagger-ui-express');
@@ -11,7 +12,6 @@ const {
   rateLimitWindowMs,
 } = require('./config');
 const { authenticateJwt, authorizeRoles } = require('./middleware/auth');
-const { createRateLimiter } = require('./middleware/rateLimit');
 
 function asyncHandler(handler) {
   return async (req, res, next) => {
@@ -64,9 +64,12 @@ function buildTextHierarchy(rows) {
 function createApp(db) {
   const app = express();
   const openapi = YAML.load(path.join(__dirname, '..', 'docs', 'openapi.yaml'));
-  const apiRateLimiter = createRateLimiter({
+  const apiRateLimiter = rateLimit({
     windowMs: rateLimitWindowMs,
-    maxRequests: rateLimitMaxRequests,
+    limit: rateLimitMaxRequests,
+    standardHeaders: true,
+    legacyHeaders: false,
+    message: { error: 'Too many requests' },
   });
 
   app.use(express.json());
