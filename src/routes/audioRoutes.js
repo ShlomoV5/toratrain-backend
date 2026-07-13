@@ -130,7 +130,9 @@ function createAudioRouter({ audioService, uploadQueue }) {
 
       const normalizedSegments = segments.map((segment) => {
         if (!segment.audioBase64) {
-          throw new Error('Each segment must include audioBase64');
+          const error = new Error('Each segment must include audioBase64');
+          error.statusCode = 400;
+          throw error;
         }
         const extension = detectExtension(segment.fileName, segment.mimeType);
         return {

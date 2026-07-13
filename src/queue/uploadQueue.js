@@ -49,7 +49,7 @@ class UploadQueue {
       return;
     }
 
-    // Process jobs sequentially to avoid concurrent writes on the same segment name.
+    // Process jobs sequentially for predictable file-system writes in this foundational queue.
     this.processing = true;
     const job = this.jobs.get(nextId);
     if (!job) {
