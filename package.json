@@ -1,0 +1,27 @@
+{
+  "name": "toratrain-backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "node --test",
+    "start": "node src/server.js",
+    "lint": "node --check src/server.js src/routes/audioRoutes.js src/queue/uploadQueue.js src/services/audioStorageService.js",
+    "build": "node -e \"console.log('No build step required for runtime JS')\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ShlomoV5/toratrain-backend.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ShlomoV5/toratrain-backend/issues"
+  },
+  "homepage": "https://github.com/ShlomoV5/toratrain-backend#readme",
+  "dependencies": {
+    "express": "^5.2.1",
+    "multer": "^2.2.0"
+  }
+}
