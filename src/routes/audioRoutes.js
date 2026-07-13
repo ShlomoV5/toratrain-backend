@@ -19,7 +19,8 @@ const upload = multer({
 });
 
 function detectExtension(fileName, mimeType) {
-  const extFromName = path.extname(fileName || '').replace('.', '').toLowerCase();
+  const ext = path.extname(fileName || '').toLowerCase();
+  const extFromName = ext ? ext.slice(1) : '';
   if (extFromName) {
     return extFromName;
   }
@@ -113,7 +114,7 @@ function createAudioRouter({ audioService, uploadQueue }) {
     try {
       const { nusach, bookId, chapter, verse, segments } = req.body;
       if (!Array.isArray(segments) || !segments.length) {
-        return res.status(400).json({ error: 'segments must be a non-empty array' });
+        return res.status(400).json({ error: 'Request body must contain a non-empty segments array' });
       }
 
       const normalizedSegments = segments.map((segment) => {

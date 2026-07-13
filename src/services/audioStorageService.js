@@ -2,6 +2,7 @@ const fs = require('node:fs/promises');
 const path = require('node:path');
 
 const SEGMENT_PARTS = ['nusach', 'bookId', 'chapter', 'verse', 'partIndex'];
+const FILE_NAME_PATTERN = /^([A-Za-z0-9]{2})-([A-Za-z0-9]{2})-([A-Za-z0-9]{2})-([A-Za-z0-9]{2})-([A-Za-z0-9]{2})\.([A-Za-z0-9]+)$/;
 
 class AudioStorageService {
   constructor(storagePath) {
@@ -43,7 +44,7 @@ class AudioStorageService {
   }
 
   static parseFileName(fileName) {
-    const match = fileName.match(/^([A-Za-z0-9]{2})-([A-Za-z0-9]{2})-([A-Za-z0-9]{2})-([A-Za-z0-9]{2})-([A-Za-z0-9]{2})\.([A-Za-z0-9]+)$/);
+    const match = fileName.match(FILE_NAME_PATTERN);
     if (!match) {
       return null;
     }

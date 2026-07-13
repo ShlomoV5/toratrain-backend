@@ -71,7 +71,9 @@ class UploadQueue {
 
     job.updatedAt = new Date().toISOString();
     this.processing = false;
-    setImmediate(() => this.processNext());
+    if (this.queue.length > 0) {
+      setImmediate(() => this.processNext());
+    }
   }
 }
 
