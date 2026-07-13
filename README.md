@@ -13,6 +13,8 @@ Backend API for text hierarchy, gamification, authentication, and assignment rou
    - `JWT_SECRET=...`
    - `JWT_EXPIRES_IN=1h` (optional)
    - `PORT=3000` (optional)
+   - `RATE_LIMIT_WINDOW_MS=60000` (optional)
+   - `RATE_LIMIT_MAX_REQUESTS=60` (optional)
 3. Create database schema:
    ```bash
    psql "$DATABASE_URL" -f db/schema.sql

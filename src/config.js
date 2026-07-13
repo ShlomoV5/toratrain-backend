@@ -6,4 +6,6 @@ module.exports = {
   jwtSecret: process.env.JWT_SECRET || 'change-me',
   jwtExpiresIn: process.env.JWT_EXPIRES_IN || '1h',
   databaseUrl: process.env.DATABASE_URL,
+  rateLimitWindowMs: Number(process.env.RATE_LIMIT_WINDOW_MS || 60_000),
+  rateLimitMaxRequests: Number(process.env.RATE_LIMIT_MAX_REQUESTS || 60),
 };

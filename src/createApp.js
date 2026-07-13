@@ -4,8 +4,14 @@ const jwt = require('jsonwebtoken');
 const path = require('path');
 const YAML = require('yamljs');
 const swaggerUi = require('swagger-ui-express');
-const { jwtExpiresIn, jwtSecret } = require('./config');
+const {
+  jwtExpiresIn,
+  jwtSecret,
+  rateLimitMaxRequests,
+  rateLimitWindowMs,
+} = require('./config');
 const { authenticateJwt, authorizeRoles } = require('./middleware/auth');
+const { createRateLimiter } = require('./middleware/rateLimit');
 
 function asyncHandler(handler) {
   return async (req, res, next) => {
@@ -58,8 +64,13 @@ function buildTextHierarchy(rows) {
 function createApp(db) {
   const app = express();
   const openapi = YAML.load(path.join(__dirname, '..', 'docs', 'openapi.yaml'));
+  const apiRateLimiter = createRateLimiter({
+    windowMs: rateLimitWindowMs,
+    maxRequests: rateLimitMaxRequests,
+  });
 
   app.use(express.json());
+  app.use('/api', apiRateLimiter);
   app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(openapi));
 
   app.post(
