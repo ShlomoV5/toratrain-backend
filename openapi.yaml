@@ -2,7 +2,7 @@ openapi: 3.0.3
 info:
   title: Torah Trainer Backend API
   version: 1.0.0
-  description: API contract for audio upload/processing, segment management, and queue tracking.
+  description: API contract for audio upload/processing, segment management, queue tracking, and Sefaria text ingestion.
 servers:
   - url: http://localhost:3000
 paths:
@@ -208,6 +208,96 @@ paths:
                 $ref: '#/components/schemas/QueueJobResponse'
         '404':
           description: Job not found
+  /api/texts/books:
+    get:
+      summary: List all books
+      responses:
+        '200':
+          description: List of books
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  count:
+                    type: integer
+                  books:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Book'
+  /api/texts/books/{bookCode}:
+    get:
+      summary: Get a single book by code
+      parameters:
+        - $ref: '#/components/parameters/BookCodePath'
+      responses:
+        '200':
+          description: Book details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Book'
+        '404':
+          description: Book not found
+  /api/texts/books/{bookCode}/chapters:
+    get:
+      summary: List chapters for a book
+      parameters:
+        - $ref: '#/components/parameters/BookCodePath'
+      responses:
+        '200':
+          description: List of chapters
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  count:
+                    type: integer
+                  chapters:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Chapter'
+  /api/texts/books/{bookCode}/chapters/{chapter}/verses:
+    get:
+      summary: List verses in a chapter
+      parameters:
+        - $ref: '#/components/parameters/BookCodePath'
+        - $ref: '#/components/parameters/ChapterNumberPath'
+      responses:
+        '200':
+          description: List of verses
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  count:
+                    type: integer
+                  verses:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Verse'
+        '400':
+          description: Invalid chapter number
+  /api/texts/books/{bookCode}/chapters/{chapter}/verses/{verse}:
+    get:
+      summary: Get a single verse with words and cantillation accents
+      parameters:
+        - $ref: '#/components/parameters/BookCodePath'
+        - $ref: '#/components/parameters/ChapterNumberPath'
+        - $ref: '#/components/parameters/VerseNumberPath'
+      responses:
+        '200':
+          description: Verse with word-level breakdown
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VerseDetail'
+        '400':
+          description: Invalid chapter or verse number
+        '404':
+          description: Verse not found
 components:
   parameters:
     NusachPath:
@@ -238,7 +328,92 @@ components:
       schema:
         type: string
         example: '12'
+    BookCodePath:
+      in: path
+      name: bookCode
+      required: true
+      schema:
+        type: string
+        example: '01'
+    ChapterNumberPath:
+      in: path
+      name: chapter
+      required: true
+      schema:
+        type: integer
+        example: 1
+    VerseNumberPath:
+      in: path
+      name: verse
+      required: true
+      schema:
+        type: integer
+        example: 1
   schemas:
+    Book:
+      type: object
+      properties:
+        id:
+          type: integer
+        code:
+          type: string
+          example: '01'
+        name:
+          type: string
+          example: Bereshit
+        category:
+          type: string
+          enum: [torah, haftarah, megillot]
+    Chapter:
+      type: object
+      properties:
+        id:
+          type: integer
+        chapter_number:
+          type: integer
+    Verse:
+      type: object
+      properties:
+        id:
+          type: integer
+        verse_number:
+          type: integer
+        raw_text:
+          type: string
+    WordAccent:
+      type: object
+      properties:
+        accentIndex:
+          type: integer
+        tropeCode:
+          type: string
+          description: Unicode code point in hex (e.g. "0596" for tipeha)
+        tropeSymbol:
+          type: string
+    VerseWord:
+      type: object
+      properties:
+        id:
+          type: integer
+        word_index:
+          type: integer
+        word_text:
+          type: string
+        normalized_text:
+          type: string
+        accents:
+          type: array
+          items:
+            $ref: '#/components/schemas/WordAccent'
+    VerseDetail:
+      allOf:
+        - $ref: '#/components/schemas/Verse'
+        - type: object
+          properties:
+            words:
+              type: array
+              items:
+                $ref: '#/components/schemas/VerseWord'
     AudioSegment:
       type: object
       properties:

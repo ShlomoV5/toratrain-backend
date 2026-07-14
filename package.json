@@ -6,8 +6,9 @@
   "scripts": {
     "test": "node --test",
     "start": "node src/server.js",
-    "lint": "node --check src/server.js src/routes/audioRoutes.js src/queue/uploadQueue.js src/services/audioStorageService.js",
-    "build": "node -e \"console.log('No build step required for runtime JS')\""
+    "lint": "node --check src/server.js src/routes/audioRoutes.js src/routes/textRoutes.js src/queue/uploadQueue.js src/services/audioStorageService.js src/services/sefariaService.js src/db/client.js src/ingestion/ingestText.js",
+    "build": "node -e \"console.log('No build step required for runtime JS')\"",
+    "ingest": "node src/ingestion/ingestText.js"
   },
   "repository": {
     "type": "git",
@@ -22,6 +23,8 @@
   "homepage": "https://github.com/ShlomoV5/toratrain-backend#readme",
   "dependencies": {
     "express": "^5.2.1",
-    "multer": "^2.2.0"
+    "express-rate-limit": "^8.5.2",
+    "multer": "^2.2.0",
+    "pg": "^8.22.0"
   }
 }
