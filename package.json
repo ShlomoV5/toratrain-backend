@@ -2,12 +2,13 @@
   "name": "toratrain-backend",
   "version": "1.0.0",
   "description": "",
-  "main": "src/server.js",
+  "main": "index.js",
   "scripts": {
-    "lint": "eslint .",
-    "build": "node --check src/server.js && node --check src/createApp.js",
     "test": "node --test",
-    "dev": "node src/server.js"
+    "start": "node src/server.js",
+    "lint": "node --check src/server.js src/routes/audioRoutes.js src/routes/textRoutes.js src/queue/uploadQueue.js src/services/audioStorageService.js src/services/sefariaService.js src/db/client.js src/ingestion/ingestText.js",
+    "build": "node -e \"console.log('No build step required for runtime JS')\"",
+    "ingest": "node src/ingestion/ingestText.js"
   },
   "repository": {
     "type": "git",
@@ -21,17 +22,9 @@
   },
   "homepage": "https://github.com/ShlomoV5/toratrain-backend#readme",
   "dependencies": {
-    "bcryptjs": "^3.0.3",
-    "dotenv": "^17.4.2",
     "express": "^5.2.1",
     "express-rate-limit": "^8.5.2",
-    "jsonwebtoken": "^9.0.3",
-    "pg": "^8.22.0",
-    "swagger-ui-express": "^5.0.1",
-    "yamljs": "^0.3.0"
-  },
-  "devDependencies": {
-    "eslint": "^10.7.0",
-    "supertest": "^7.2.2"
+    "multer": "^2.2.0",
+    "pg": "^8.22.0"
   }
 }
